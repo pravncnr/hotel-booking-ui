@@ -7,28 +7,32 @@ import BookingForm from './components/BookingForm';
 import BookingList from './components/BookingList';
 import Login from './components/Login';
 import {useUserContext} from "./context/UserContext";
+import NavBar from './components/NavBar';
 
 const App: React.FC = () => {
     const [hotelId, setHotelId] = useState<string>('');
     const { userId } = useUserContext(); // Access userId from context
+    // const userId = sessionStorage.getItem("userId") ?? '';
 
 
 
     return (
         <Router>
             <div className="App">
-                {userId && <h2>Logged in as {userId} </h2> }
+                <NavBar user={userId} />
+
                 <Routes>
                     <Route path="/" element={<Login />} />
-                    <Route path="/hotels/" element={<HotelList locationFilter="" setSelectedHotelId={setHotelId}  />} />
 
-                    {/* Use 'useParams' to get hotelId */}
-                    <Route
+                    {userId && <Route path="/hotels/" element={<HotelList locationFilter="" setSelectedHotelId={setHotelId}  />} /> }
+
+                    {userId && <Route
                         path="/book/:hotelId"
                         element={<BookingForm hotelId={hotelId} userId={userId} />}
-                    />
+                    /> }
 
-                    <Route path="/bookings" element={<BookingList userId={'1'} />} />
+                    {userId && <Route path="/bookings" element={<BookingList userId={userId} />} /> }
+
                 </Routes>
             </div>
         </Router>

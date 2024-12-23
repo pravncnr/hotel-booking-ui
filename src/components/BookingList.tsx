@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {Booking, Bookings} from '../types';
 import { getBookings, cancelBooking, updateBooking } from '../api';
+import {useUserContext} from "../context/UserContext";
 
 interface Props {
   userId: string;

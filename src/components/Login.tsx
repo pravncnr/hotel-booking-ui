@@ -23,15 +23,23 @@ const Login: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Login</h2>
-      <select onChange={e => {setSelectedUser(e.target.value);  }} value={selectedUser}>
-        <option value="">Select User</option>
-        {users.map(user => (
-          <option key={user.id} value={user.id}>{user.username}</option>
-        ))}
-      </select>
-      <button onClick={() => {setUserId(selectedUser); navigate(`/hotels/`); }}>Login</button>
+    <div className="container  mt-5">
+
+      <div className="row">
+        <div className="col-sm-4"></div>
+        <div className="col-sm-4" >
+          <label htmlFor="username" className="form-label">Select a user</label>
+          <select id="username" className="form-select" onChange={e => {setSelectedUser(e.target.value);  }} value={selectedUser}>
+            <option value="">Select User</option>
+            {users.map(user => (
+                <option key={user.id} value={user.id}>{user.username}</option>
+            ))}
+          </select>
+          <br/>
+          <button  type="button" className="btn btn-primary"  onClick={() => {setUserId(selectedUser); sessionStorage.setItem("userId", selectedUser ); navigate(`/hotels/`); }}>Login</button>
+        </div>
+        <div className="col-sm-4"></div>
+    </div>
     </div>
   );
 };
