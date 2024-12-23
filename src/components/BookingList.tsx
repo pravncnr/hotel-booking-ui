@@ -17,6 +17,7 @@ const BookingList: React.FC<Props> = ({ userId }) => {
   const [rooms, setRooms] = useState<number>(1);
   const [checkin, setCheckin] = useState<string>("");
   const [checkout, setCheckout] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -45,15 +46,22 @@ const BookingList: React.FC<Props> = ({ userId }) => {
         checkin,
         checkout,
       };
-      await updateBooking(selectedBooking.id, updatedBooking);
-      setBookings(
-        bookings.map((booking) =>
-          booking.id === selectedBooking.id
-            ? { ...booking, ...updatedBooking }
-            : booking,
-        ),
-      );
-      setShowUpdateModal(false); // Close modal after update
+
+      try {
+        await updateBooking(selectedBooking.id, updatedBooking);
+        setBookings(
+            bookings.map((booking) =>
+                booking.id === selectedBooking.id
+                    ? {...booking, ...updatedBooking}
+                    : booking,
+            ),
+        );
+        setShowUpdateModal(false); // Close modal after update
+      }
+      catch (err){
+        console.log(err);
+        setError("Update Failed")
+      }
     }
   };
 
@@ -124,6 +132,7 @@ const BookingList: React.FC<Props> = ({ userId }) => {
                           setCheckout(booking.checkout);
                           setRooms(booking.rooms);
                           setShowUpdateModal(true);
+                          setError('');
                         }}
                       >
                         Update
@@ -202,6 +211,10 @@ const BookingList: React.FC<Props> = ({ userId }) => {
                 ></button>
               </div>
               <div className="modal-body">
+                {error && <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>}
+
                 <div className="mb-3">
                   <label htmlFor="rooms" className="form-label">
                     Rooms:
