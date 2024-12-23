@@ -17,6 +17,23 @@ const BookingForm: React.FC<BookingFormProps> = () => {
   const [checkOutDate, setCheckOutDate] = useState('');
     const { userId } = useUserContext(); // Access userId from context
 
+
+    const getTomorrow = () => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow.toISOString().split('T')[0];
+    }
+
+    const getCheckoutDate = () => {
+        if(checkInDate){
+            const futureDate = new Date(checkInDate);
+            futureDate.setDate(futureDate.getDate() + 1);
+            return futureDate.toISOString().split('T')[0];
+        }
+        return getTomorrow()
+    }
+
+
   const handleSubmit = async (e: React.FormEvent) => {
       const formattedCheckInDate = new Date(checkInDate).toISOString();
       const formattedCheckOutDate = new Date(checkOutDate).toISOString();
@@ -48,6 +65,7 @@ const BookingForm: React.FC<BookingFormProps> = () => {
           <input
               type="date"
               value={checkInDate}
+              min={getTomorrow()}
               onChange={e => setCheckInDate(e.target.value)}
           />
         </div>
@@ -56,6 +74,7 @@ const BookingForm: React.FC<BookingFormProps> = () => {
           <input
               type="date"
               value={checkOutDate}
+              min={getCheckoutDate()}
               onChange={e => setCheckOutDate(e.target.value)}
           />
         </div>
